@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WorldTable — Global Recipes</title>
+<style>
+:root{--bg:#faf9f6;--card:#fff;--ink:#172018;--muted:#68706a;--line:#e6e4de;--accent:#176b4d;--accent2:#d66b32}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+header{position:sticky;top:0;z-index:20;background:rgba(250,249,246,.94);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.nav{max-width:1180px;margin:auto;padding:15px 22px;display:flex;align-items:center;justify-content:space-between}
+.logo{font-size:24px;font-weight:900;letter-spacing:-.5px}.logo b{color:var(--accent)}
+nav a{margin-left:22px;text-decoration:none;color:var(--ink);font-weight:700}nav a:hover{color:var(--accent)}
+.hero{max-width:1180px;margin:auto;padding:70px 22px 55px;display:grid;grid-template-columns:1.1fr .9fr;gap:45px;align-items:center}
+.kicker{color:var(--accent);font-weight:900;letter-spacing:1.5px;font-size:13px}
+h1{font-size:clamp(45px,6vw,78px);line-height:.98;letter-spacing:-3px;margin:14px 0 20px}
+.hero p{font-size:18px;line-height:1.7;color:var(--muted);max-width:680px}
+.btn{display:inline-block;border:0;border-radius:12px;padding:13px 18px;background:var(--accent);color:white;text-decoration:none;font-weight:850;cursor:pointer}.btn.alt{background:#fff;color:var(--ink);border:1px solid var(--line);margin-left:8px}
+.hero-img{min-height:420px;border-radius:30px;background:linear-gradient(135deg,rgba(0,0,0,.02),rgba(0,0,0,.2)),url('https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=1100&q=85') center/cover;box-shadow:0 22px 55px rgba(23,32,24,.14)}
+section{max-width:1180px;margin:auto;padding:35px 22px}.heading{display:flex;justify-content:space-between;align-items:end;gap:20px}.heading h2{font-size:35px;margin:0 0 5px}.heading p{margin:0;color:var(--muted)}
+.search{width:290px;padding:13px 15px;border:1px solid var(--line);border-radius:12px;background:#fff;font-size:15px}
+.filters{display:flex;gap:9px;flex-wrap:wrap;margin:22px 0}.filter{border:1px solid var(--line);background:#fff;padding:9px 14px;border-radius:999px;font-weight:750;cursor:pointer}.filter.active,.filter:hover{background:var(--accent);color:#fff;border-color:var(--accent)}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}.card{background:var(--card);border:1px solid var(--line);border-radius:20px;overflow:hidden;box-shadow:0 10px 30px rgba(20,25,20,.06)}
+.pic{height:210px;background-position:center;background-size:cover}.body{padding:18px}.body h3{font-size:22px;margin:0 0 7px}.body p{color:var(--muted);line-height:1.55;margin:0 0 14px}.tags{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:15px}.tag{font-size:12px;font-weight:800;background:#eef5f0;color:var(--accent);padding:5px 8px;border-radius:999px}.meta{display:flex;justify-content:space-between;font-size:13px;color:#737b75;font-weight:700}
+.accuracy{margin-top:25px;background:#173f30;color:white;border-radius:22px;padding:28px}.accuracy h3{margin-top:0;font-size:23px}.accuracy p{color:#d8e7df;line-height:1.65;margin-bottom:0}
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.62);z-index:50;padding:20px;overflow:auto}.box{max-width:780px;margin:35px auto;background:#fff;border-radius:22px;padding:28px;position:relative}.close{position:absolute;right:17px;top:12px;background:none;border:0;font-size:30px;cursor:pointer}.box h2{margin:0 40px 5px 0}.source{color:var(--muted);font-size:13px;margin-bottom:22px}.box li{margin:9px 0;line-height:1.5}.note{background:#f4f7f4;border-left:4px solid var(--accent);padding:12px 15px;margin-top:18px;line-height:1.55}
+.empty{display:none;text-align:center;color:var(--muted);padding:35px}
+footer{text-align:center;padding:40px 20px;color:var(--muted)}
+@media(max-width:820px){.hero{grid-template-columns:1fr}.hero-img{min-height:300px}.grid{grid-template-columns:1fr 1fr}.heading{align-items:stretch;flex-direction:column}.search{width:100%}nav{display:none}}
+@media(max-width:560px){.grid{grid-template-columns:1fr}h1{letter-spacing:-2px}.btn.alt{margin-left:4px}}
+</style>
+
+<style>
+.pro-bar{max-width:1150px;margin:18px auto;padding:0 22px;display:flex;gap:10px;flex-wrap:wrap}
+.pro-panel{background:#fff;border:1px solid #e3e6e0;border-radius:18px;padding:22px;box-shadow:0 8px 25px rgba(20,30,23,.05)}
+.recipe-actions{display:flex;gap:8px;align-items:center;margin-top:12px}
+.fav-btn{border:1px solid #e3e6e0;background:#fff;border-radius:10px;padding:9px 12px;cursor:pointer;font-weight:800}
+.fav-btn.saved{color:#b53e32;background:#fff0ed}
+.star-rating button{border:0;background:none;font-size:25px;cursor:pointer;padding:1px}
+.submit-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.form-field{width:100%;padding:11px 13px;border:1px solid #ddd;border-radius:10px;margin:6px 0;background:#fff}
+@media(max-width:700px){.submit-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header><div class="nav"><div class="logo">World<b>Table</b> 🌍</div><nav><a href="#recipes">Recipes</a><a href="#accuracy">Accuracy</a></nav></div></header>
+
+<main>
+<section class="hero">
+<div><div class="kicker">RECIPES FROM AROUND THE WORLD</div><h1>One table.<br>Many cultures.</h1><p>A clean global recipe collection covering iconic dishes from Asia, Europe, the Americas, Africa and the Middle East—with standardized measurements, clear methods and practical cooking notes.</p><a class="btn" href="#recipes">Explore recipes</a><a class="btn alt" href="#accuracy">Our accuracy standard</a></div>
+<div class="hero-img"></div>
+</section>
+
+
+<section class="pro-bar">
+  <div class="pro-panel">
+    <strong>❤️ Favorites:</strong> <span id="favCount">0</span>
+  </div>
+  <div class="pro-panel">
+    <strong>⭐ Your ratings:</strong> saved privately in this browser
+  </div>
+</section>
+
+<section id="recipes">
+<div class="heading"><div><h2>Global recipe collection</h2><p>Search by dish, country, region or category.</p></div><input id="search" class="search" placeholder="Search recipes..."></div>
+<div class="filters">
+<button class="filter active" data-filter="all">All</button><button class="filter" data-filter="asia">Asia</button><button class="filter" data-filter="europe">Europe</button><button class="filter" data-filter="americas">Americas</button><button class="filter" data-filter="middle-east">Middle East</button><button class="filter" data-filter="africa">Africa</button><button class="filter" data-filter="cakes">Cakes</button><button class="filter" data-filter="vegetarian">Vegetarian</button><button class="filter" data-filter="cake">Cakes 🎂</button>
+</div>
+<div class="grid" id="grid">
+<!-- Recipe cards -->
+<article class="card" data-cat="asia" data-name="japanese ramen japan noodles"><div class="pic" style="background-image:url('https://images.unsplash.com/photo-1569718212165-3a8278d5f624?auto=format&fit=crop&w=900&q=80')"></div><div class="body"><h3>Japanese Ramen</h3><p>Warm noodle soup with broth, noodles and classic toppings.</p><div class="tags"><span class="tag">Japan</span><span class="tag">Asia</span></div><div class="meta"><span>⏱ 60 min</span><button class="btn" onclick="show('ramen')">Recipe</button></div></div></article>
+<article class="card" data-cat="europe" data-name="italian pasta carbonara italy"><div class="pic" style="background-image:url('https://images.unsplash.com/photo-1612874742237-6526221588e3?auto=format&fit=crop&w=900&q=80')"></div><div class="body"><h3>Spaghetti Carbonara</h3><p>A Roman pasta classic made with egg, cheese, cured pork and pepper.</p><div class="tags"><span class="tag">Italy</span><span class="tag">Europe</span></div><div class="meta"><span>⏱ 25 min</span><button class="btn" onclick="show('carbonara')">Recipe</button></div></div></article>
+<article class="card" data-cat="middle-east" data-name="lebanese hummus chickpea lebanon vegetarian"><div class="pic" style="background-image:url('https://images.unsplash.com/photo-1577805947697-89e18249d767?auto=format&fit=crop&w=900&q=80')"></div><div class="body"><h3>Hummus</h3><p>Creamy chickpea and tahini dip finished with lemon and olive oil.</p><div class="tags"><span class="tag">Lebanon</span><span class="tag">Vegetarian</span></div><div class="meta"><span>⏱ 15 min</span><button class="btn" onclick="show('hummus')">Recipe</button></div></div></article>
+<article class="card" data-cat="americas" data-name="mexican guacamole avocado mexico vegetarian"><div class="pic" style="background-image:url('https://images.unsplash.com/photo-1552332386-f8dd00dc2f85?auto=format&fit=crop&w=900&q=80')"></div><div class="body"><h3>Guacamole</h3><p>Fresh avocado dip with lime, onion, chilli and coriander.</p><div class="tags"><span class="tag">Mexico</span><span class="tag">Vegetarian</span></div><div class="meta"><span>⏱ 15 min</span><button class="btn" onclick="show('guac')">Recipe</button></div></div></article>
+<article class="card" data-cat="africa" data-name="moroccan tagine chicken Morocco africa"><div class="pic" style="background-image:url('https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=900&q=80')"></div><div class="body"><h3>Moroccan Chicken Tagine</h3><p>Slow-cooked chicken with warm spices, preserved lemon and olives.</p><div class="tags"><span class="tag">Morocco</span><span class="tag">Africa</span></div><div class="meta"><span>⏱ 90 min</span><button class="btn" onclick="show('tagine')">Recipe</button></div></div></article>
+<article class="card" data-cat="asia" data-name="indian butter chicken india"><div class="pic" style="background-image:url('https://images.unsplash.com/photo-1603894584373-5ac82b2ae398?auto=format&fit=crop&w=900&q=80')"></div><div class="body"><h3>Butter Chicken</h3><p>North Indian-style chicken in a tomato-based, gently spiced sauce.</p><div class="tags"><span class="tag">India</span><span class="tag">Asia</span></div><div class="meta"><span>⏱ 55 min</span><button class="btn" onclick="show('butter')">Recipe</button></div></div></article>
+
+<article class="card" data-cat="cake" data-name="chocolate cake cake dessert">
+<div class="pic" style="background-image:url('https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=900&q=80')"></div>
+<div class="body"><h3>Classic Chocolate Cake</h3><p>Moist chocolate sponge with a rich cocoa flavor.</p><div class="tags"><span class="tag">Global</span><span class="tag">Cake</span></div><div class="meta"><span>⏱ 50 min</span><button class="btn" onclick="show('chocolateCake')">Recipe</button></div></div></article>
+
+<article class="card" data-cat="cake" data-name="vanilla cake cake dessert">
+<div class="pic" style="background-image:url('https://images.unsplash.com/photo-1588195538326-c5b1e9f80a1b?auto=format&fit=crop&w=900&q=80')"></div>
+<div class="body"><h3>Vanilla Butter Cake</h3><p>Soft, buttery vanilla cake with a tender crumb.</p><div class="tags"><span class="tag">Classic</span><span class="tag">Cake</span></div><div class="meta"><span>⏱ 50 min</span><button class="btn" onclick="show('vanillaCake')">Recipe</button></div></div></article>
+
+<article class="card" data-cat="cake" data-name="red velvet cake american dessert">
+<div class="pic" style="background-image:url('https://images.unsplash.com/photo-1586788224331-947f68671cf1?auto=format&fit=crop&w=900&q=80')"></div>
+<div class="body"><h3>Red Velvet Cake</h3><p>Light cocoa cake traditionally paired with cream cheese frosting.</p><div class="tags"><span class="tag">USA</span><span class="tag">Cake</span></div><div class="meta"><span>⏱ 75 min</span><button class="btn" onclick="show('redVelvet')">Recipe</button></div></div></article>
+
+<article class="card" data-cat="cake" data-name="carrot cake cake dessert">
+<div class="pic" style="background-image:url('https://images.unsplash.com/photo-1621303837174-89787a7d4729?auto=format&fit=crop&w=900&q=80')"></div>
+<div class="body"><h3>Carrot Cake</h3><p>Spiced carrot cake with a moist crumb and optional cream cheese frosting.</p><div class="tags"><span class="tag">Classic</span><span class="tag">Cake</span></div><div class="meta"><span>⏱ 65 min</span><button class="btn" onclick="show('carrotCake')">Recipe</button></div></div></article>
+
+<article class="card" data-cat="cake" data-name="lemon drizzle cake british uk dessert">
+<div class="pic" style="background-image:url('https://images.unsplash.com/photo-1519915028121-7d3463d20b13?auto=format&fit=crop&w=900&q=80')"></div>
+<div class="body"><h3>Lemon Drizzle Cake</h3><p>Bright British-style sponge finished with a fresh lemon syrup.</p><div class="tags"><span class="tag">UK</span><span class="tag">Cake</span></div><div class="meta"><span>⏱ 55 min</span><button class="btn" onclick="show('lemonCake')">Recipe</button></div></div></article>
+
+<article class="card" data-cat="cake" data-name="cheesecake new york cake dessert">
+<div class="pic" style="background-image:url('https://images.unsplash.com/photo-1565958011703-44f9829ba187?auto=format&fit=crop&w=900&q=80')"></div>
+<div class="body"><h3>New York Cheesecake</h3><p>Dense, creamy baked cheesecake with a simple biscuit base.</p><div class="tags"><span class="tag">USA</span><span class="tag">Cake</span></div><div class="meta"><span>⏱ 90 min</span><button class="btn" onclick="show('cheesecake')">Recipe</button></div></div></article>
+
+<article class="card" data-cat="cake" data-name="tiramisu cake italian italy dessert">
+<div class="pic" style="background-image:url('https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?auto=format&fit=crop&w=900&q=80')"></div>
+<div class="body"><h3>Tiramisu</h3><p>Italian coffee-and-mascarpone dessert layered with soaked biscuits.</p><div class="tags"><span class="tag">Italy</span><span class="tag">Dessert</span></div><div class="meta"><span>⏱ 35 min</span><button class="btn" onclick="show('tiramisu')">Recipe</button></div></div></article>
+
+<article class="card" data-cat="cake" data-name="black forest cake german germany dessert">
+<div class="pic" style="background-image:url('https://images.unsplash.com/photo-1602351447937-745cb720612f?auto=format&fit=crop&w=900&q=80')"></div>
+<div class="body"><h3>Black Forest Cake</h3><p>Chocolate sponge layered with cherries and whipped cream.</p><div class="tags"><span class="tag">Germany</span><span class="tag">Cake</span></div><div class="meta"><span>⏱ 100 min</span><button class="btn" onclick="show('blackForest')">Recipe</button></div></div></article>
+
+<article class="card" data-cat="cake" data-name="tres leches cake mexican latin america dessert">
+<div class="pic" style="background-image:url('https://images.unsplash.com/photo-1551024506-0bccd828d307?auto=format&fit=crop&w=900&q=80')"></div>
+<div class="body"><h3>Tres Leches Cake</h3><p>Light sponge soaked with three milks and topped with whipped cream.</p><div class="tags"><span class="tag">Latin America</span><span class="tag">Cake</span></div><div class="meta"><span>⏱ 75 min</span><button class="btn" onclick="show('tresLeches')">Recipe</button></div></div></article>
+
+<article class="card" data-cat="cake" data-name="banana bread banana cake dessert">
+<div class="pic" style="background-image:url('https://images.unsplash.com/photo-1606101273945-e9eba24d9e9a?auto=format&fit=crop&w=900&q=80')"></div>
+<div class="body"><h3>Banana Bread</h3><p>Easy, moist banana loaf that is excellent for using ripe bananas.</p><div class="tags"><span class="tag">Classic</span><span class="tag">Cake</span></div><div class="meta"><span>⏱ 65 min</span><button class="btn" onclick="show('bananaBread')">Recipe</button></div></div></article>
+
+<article class="card" data-cat="cake" data-name="coconut cake cake dessert">
+<div class="pic" style="background-image:url('https://images.unsplash.com/photo-1571115177098-24ec42ed204d?auto=format&fit=crop&w=900&q=80')"></div>
+<div class="body"><h3>Coconut Cake</h3><p>Soft coconut-flavored sponge with toasted coconut for texture.</p><div class="tags"><span class="tag">Tropical</span><span class="tag">Cake</span></div><div class="meta"><span>⏱ 60 min</span><button class="btn" onclick="show('coconutCake')">Recipe</button></div></div></article>
+
+<article class="card" data-cat="cake" data-name="coffee cake cinnamon dessert">
+<div class="pic" style="background-image:url('https://images.unsplash.com/photo-1607920592519-7e5f6f9f7f9f?auto=format&fit=crop&w=900&q=80')"></div>
+<div class="body"><h3>Cinnamon Coffee Cake</h3><p>Soft tea-time cake with a cinnamon crumb topping.</p><div class="tags"><span class="tag">Classic</span><span class="tag">Cake</span></div><div class="meta"><span>⏱ 55 min</span><button class="btn" onclick="show('coffeeCake')">Recipe</button></div></div></article>
+</div><div class="empty" id="empty">No recipes match your search.</div>
+</section>
+
+
+<section id="cakes">
+<div class="heading"><div><h2>🍰 Cake Collection</h2><p>Classic, regional and celebration cakes from around the world.</p></div></div>
+<div class="grid">
+<article class="card"><div class="pic" style="background-image:url('https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=900&q=80')"></div><div class="body"><h3>Classic Vanilla Cake</h3><p>Light vanilla sponge with a simple buttercream frosting.</p><div class="tags"><span class="tag">Classic</span><span class="tag">Cake</span></div><div class="meta"><span>⏱ 55 min</span><button class="btn" onclick="show('vanilla')">Recipe</button></div></div></article>
+<article class="card"><div class="pic" style="background-image:url('https://images.unsplash.com/photo-1606890737304-57a1ca8a5b62?auto=format&fit=crop&w=900&q=80')"></div><div class="body"><h3>Chocolate Fudge Cake</h3><p>Rich chocolate cake with a smooth, fudgy chocolate finish.</p><div class="tags"><span class="tag">Chocolate</span><span class="tag">Cake</span></div><div class="meta"><span>⏱ 60 min</span><button class="btn" onclick="show('chocolate')">Recipe</button></div></div></article>
+<article class="card"><div class="pic" style="background-image:url('https://images.unsplash.com/photo-1551024506-0bccd828d307?auto=format&fit=crop&w=900&q=80')"></div><div class="body"><h3>Red Velvet Cake</h3><p>Soft cocoa-red layers paired with tangy cream-cheese frosting.</p><div class="tags"><span class="tag">American</span><span class="tag">Cake</span></div><div class="meta"><span>⏱ 75 min</span><button class="btn" onclick="show('redvelvet')">Recipe</button></div></div></article>
+<article class="card"><div class="pic" style="background-image:url('https://images.unsplash.com/photo-1488477181946-6428a0291777?auto=format&fit=crop&w=900&q=80')"></div><div class="body"><h3>Carrot Cake</h3><p>Moist spiced carrot cake with a creamy frosting.</p><div class="tags"><span class="tag">Classic</span><span class="tag">Cake</span></div><div class="meta"><span>⏱ 70 min</span><button class="btn" onclick="show('carrot')">Recipe</button></div></div></article>
+<article class="card"><div class="pic" style="background-image:url('https://images.unsplash.com/photo-1571115177098-24ec42ed204d?auto=format&fit=crop&w=900&q=80')"></div><div class="body"><h3>Lemon Drizzle Cake</h3><p>Buttery lemon sponge finished with a bright lemon drizzle.</p><div class="tags"><span class="tag">British</span><span class="tag">Cake</span></div><div class="meta"><span>⏱ 55 min</span><button class="btn" onclick="show('lemon')">Recipe</button></div></div></article>
+<article class="card"><div class="pic" style="background-image:url('https://images.unsplash.com/photo-1586985289688-ca3cf47d3e6e?auto=format&fit=crop&w=900&q=80')"></div><div class="body"><h3>Cheesecake</h3><p>Creamy baked cheesecake on a crisp biscuit base.</p><div class="tags"><span class="tag">American</span><span class="tag">Cake</span></div><div class="meta"><span>⏱ 90 min</span><button class="btn" onclick="show('cheesecake')">Recipe</button></div></div></article>
+<article class="card"><div class="pic" style="background-image:url('https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=900&q=80')"></div><div class="body"><h3>Black Forest Cake</h3><p>Chocolate sponge with cherries and whipped cream.</p><div class="tags"><span class="tag">Germany</span><span class="tag">Cake</span></div><div class="meta"><span>⏱ 85 min</span><button class="btn" onclick="show('blackforest')">Recipe</button></div></div></article>
+<article class="card"><div class="pic" style="background-image:url('https://images.unsplash.com/photo-1621303837174-89787a7d4729?auto=format&fit=crop&w=900&q=80')"></div><div class="body"><h3>Tiramisu Cake</h3><p>Coffee-soaked cake layers with mascarpone-style cream and cocoa.</p><div class="tags"><span class="tag">Italy</span><span class="tag">Cake</span></div><div class="meta"><span>⏱ 80 min</span><button class="btn" onclick="show('tiramisu')">Recipe</button></div></div></article>
+<article class="card"><div class="pic" style="background-image:url('https://images.unsplash.com/photo-1571115177098-24ec42ed204d?auto=format&fit=crop&w=900&q=80')"></div><div class="body"><h3>Banana Cake</h3><p>Soft banana cake that makes good use of very ripe bananas.</p><div class="tags"><span class="tag">Fruit</span><span class="tag">Cake</span></div><div class="meta"><span>⏱ 55 min</span><button class="btn" onclick="show('banana')">Recipe</button></div></div></article>
+<article class="card"><div class="pic" style="background-image:url('https://images.unsplash.com/photo-1606313564200-e75d5e30476c?auto=format&fit=crop&w=900&q=80')"></div><div class="body"><h3>Coconut Cake</h3><p>Tender coconut sponge with coconut cream frosting.</p><div class="tags"><span class="tag">Tropical</span><span class="tag">Cake</span></div><div class="meta"><span>⏱ 65 min</span><button class="btn" onclick="show('coconut')">Recipe</button></div></div></article>
+<article class="card"><div class="pic" style="background-image:url('https://images.unsplash.com/photo-1565958011703-44f9829ba187?auto=format&fit=crop&w=900&q=80')"></div><div class="body"><h3>Strawberry Shortcake</h3><p>Soft sponge with strawberries and lightly sweetened cream.</p><div class="tags"><span class="tag">Fruit</span><span class="tag">Cake</span></div><div class="meta"><span>⏱ 50 min</span><button class="btn" onclick="show('strawberry')">Recipe</button></div></div></article>
+<article class="card"><div class="pic" style="background-image:url('https://images.unsplash.com/photo-1607920591413-4ec007e70023?auto=format&fit=crop&w=900&q=80')"></div><div class="body"><h3>Marble Cake</h3><p>Vanilla and chocolate batters swirled together into one loaf-style cake.</p><div class="tags"><span class="tag">Classic</span><span class="tag">Cake</span></div><div class="meta"><span>⏱ 60 min</span><button class="btn" onclick="show('marble')">Recipe</button></div></div></article>
+<article class="card"><div class="pic" style="background-image:url('https://images.unsplash.com/photo-1614707267537-2b8f7c7f7d8b?auto=format&fit=crop&w=900&q=80')"></div><div class="body"><h3>Japanese Cotton Cheesecake</h3><p>Light, airy cheesecake with a soft soufflé-like texture.</p><div class="tags"><span class="tag">Japan</span><span class="tag">Cake</span></div><div class="meta"><span>⏱ 80 min</span><button class="btn" onclick="show('cotton')">Recipe</button></div></div></article>
+</div>
+</section>
+
+
+<section class="pro-panel" style="max-width:1150px;margin:35px auto;padding:25px" id="submit">
+<h2>Submit a Recipe</h2>
+<p style="color:#68736c">Add a recipe to your local demo library. For a real public website, submissions should go to a secure database and moderation queue.</p>
+<div class="submit-grid">
+<div>
+<input class="form-field" id="newTitle" placeholder="Recipe name">
+<input class="form-field" id="newCountry" placeholder="Country / region">
+<textarea class="form-field" id="newIngredients" rows="7" placeholder="Ingredients — one per line"></textarea>
+<textarea class="form-field" id="newSteps" rows="7" placeholder="Method — one step per line"></textarea>
+<button class="btn" onclick="submitRecipe()">Save Recipe</button>
+</div>
+<div>
+<h3>Professional publishing checklist</h3>
+<ul>
+<li>Test every recipe before publishing.</li>
+<li>Use weight-based measurements where practical.</li>
+<li>Record serving size and cooking temperature.</li>
+<li>Credit the source and distinguish adaptations from traditional recipes.</li>
+<li>Review allergens and food-safety instructions.</li>
+</ul>
+</div>
+</div>
+</section>
+
+<section id="accuracy">
+<div class="accuracy"><h3>🔎 Built around recipe accuracy</h3><p>This demo avoids pretending that a recipe is “authentic” simply because it has a country label. A production version should verify each recipe against reputable culinary references, preserve regional variations, distinguish traditional methods from adaptations, use tested metric measurements, and clearly label substitutions or optional ingredients.</p></div>
+</section>
+</main>
+<footer>© 2026 WorldTable · Global food, carefully documented.<br><small>Custom-domain ready: connect your domain through your hosting provider after deployment.</small></footer>
+
+<div class="modal" id="modal"><div class="box"><button class="close" onclick="hide()">×</button><div id="content"></div></div></div>
+
+<script>
+const data={
+ramen:{title:"Japanese Ramen",source:"Example recipe — verify against your preferred regional ramen style.",ing:["800 ml chicken or vegetable stock","2 portions ramen noodles","2 tbsp soy sauce","1 tsp sesame oil","2 eggs","Spring onion","Nori or other preferred toppings"],steps:["Prepare the broth and season with soy sauce and sesame oil.","Cook the noodles according to their package directions.","Soft-boil the eggs, cool briefly and peel.","Place noodles in bowls, add hot broth, then arrange egg and toppings.","Serve immediately."],note:"Ramen varies widely by region and style. This is a simplified home version, not a single definitive traditional recipe."},
+carbonara:{title:"Spaghetti Carbonara",source:"Classic Roman-style framework; ingredient ratios can vary by cook.",ing:["200 g spaghetti","100 g guanciale or pancetta","2 large eggs + 1 yolk","50–60 g finely grated Pecorino Romano","Freshly ground black pepper","Salt for pasta water"],steps:["Cook spaghetti in well-salted water until al dente; reserve pasta water.","Cook guanciale gently until rendered and crisp at the edges.","Mix eggs, yolk, cheese and plenty of black pepper in a bowl.","Toss hot pasta with the guanciale and pan fat off the heat.","Add the egg-cheese mixture while tossing continuously, loosening with small splashes of pasta water until glossy.","Serve immediately with more Pecorino and pepper."],note:"Traditional Roman carbonara does not require cream. The sauce becomes creamy from eggs, cheese, rendered pork fat and starchy pasta water."},
+hummus:{title:"Hummus",source:"Levantine-style hummus framework.",ing:["400 g cooked chickpeas","100–120 g tahini","2 tbsp lemon juice, plus more to taste","1 small garlic clove","1/2 tsp salt, plus more to taste","2–4 tbsp cold water","Extra-virgin olive oil for serving"],steps:["Blend chickpeas, tahini, lemon juice, garlic and salt.","Add cold water gradually and blend until smooth and creamy.","Taste and adjust lemon, salt or tahini.","Spoon into a bowl and finish with olive oil."],note:"Hummus recipes differ across the Levant. Chickpea-to-tahini ratios and lemon levels are not universal."},
+guac:{title:"Guacamole",source:"Mexican-style fresh guacamole framework.",ing:["2 ripe avocados","1–2 tbsp finely diced white onion","1 small tomato, optional","1 small fresh chilli, finely chopped","1–2 tbsp lime juice","Fresh coriander","Salt"],steps:["Halve and pit the avocados, then scoop the flesh into a bowl.","Mash to your preferred texture.","Fold in onion, chilli, coriander and optional tomato.","Add lime juice and salt to taste. Serve fresh."],note:"Guacamole has many regional and family variations. Tomato is common in some versions and omitted in others."},
+tagine:{title:"Moroccan Chicken Tagine",source:"Moroccan-inspired home version.",ing:["700 g chicken pieces","1 onion, sliced","2 garlic cloves","1 tsp ground ginger","1 tsp turmeric","1/2 tsp black pepper","1/2 tsp cumin","1 preserved lemon, rinsed and sliced","100 g green olives","Fresh coriander","2 tbsp olive oil"],steps:["Warm olive oil in a heavy pot. Brown chicken lightly, then remove.","Cook onion and garlic until softened; add spices and stir briefly.","Return chicken, add a small amount of water, cover and simmer gently until tender.","Add preserved lemon and olives near the end and cook for several minutes.","Finish with fresh coriander and serve with bread or couscous."],note:"A tagine can refer to both the cooking vessel and a family of Moroccan dishes. Cooking times vary with the cut of chicken."},
+butter:{title:"Butter Chicken",source:"North Indian-style home version; regional and restaurant versions vary.",ing:["600 g boneless chicken","150 g yogurt","1 tbsp ginger-garlic paste","1 tsp chilli powder","2 tbsp butter","1 tbsp oil","400 g crushed tomatoes","1 tsp garam masala","1/2 tsp ground cumin","100 ml cream, optional","Salt","Fresh coriander"],steps:["Marinate chicken with yogurt, ginger-garlic, chilli and salt for at least 30 minutes.","Cook chicken until browned and cooked through; set aside.","Heat butter and oil, cook tomatoes and spices until thick and the oil begins to separate.","Blend sauce if desired, then return chicken and simmer gently.","Stir in cream if using and finish with garam masala and coriander."],note:"“Butter chicken” and similar tomato-based chicken dishes have many restaurant and home adaptations. This recipe is deliberately labeled as a style rather than the only authentic version."},
+chocolateCake:{title:"Classic Chocolate Cake",source:"Standard home-baking formula; oven performance varies.",ing:["200 g plain flour","200 g sugar","50 g unsweetened cocoa","1 tsp baking powder","1/2 tsp baking soda","2 eggs","120 ml neutral oil","180 ml milk","120 ml hot water","1 tsp vanilla","Pinch of salt"],steps:["Heat oven to 175°C. Grease and line two 20 cm cake tins.","Whisk flour, sugar, cocoa, baking powder, baking soda and salt.","Add eggs, oil, milk and vanilla; mix until combined. Stir in hot water carefully.","Divide between tins and bake about 25–32 minutes, until a skewer comes out with a few moist crumbs.","Cool completely before filling or frosting."],note:"For reliable accuracy, use a kitchen scale and verify doneness by temperature/texture because ovens and tins differ."},
+vanillaCake:{title:"Vanilla Butter Cake",source:"Classic butter-cake method.",ing:["200 g unsalted butter, softened","200 g sugar","4 eggs","200 g plain flour","2 tsp baking powder","120 ml milk","2 tsp vanilla","Pinch of salt"],steps:["Heat oven to 175°C and prepare two 20 cm tins.","Beat butter and sugar until light. Add eggs one at a time.","Fold in flour, baking powder and salt alternately with milk; add vanilla.","Divide batter between tins and bake 25–30 minutes.","Cool before frosting or serving."],note:"Creaming time affects texture; softened butter should be pliable, not melted."},
+redVelvet:{title:"Red Velvet Cake",source:"American-style red velvet framework.",ing:["250 g plain flour","200 g sugar","1 tbsp cocoa","1 tsp baking soda","1/2 tsp salt","2 eggs","180 ml buttermilk","120 ml neutral oil","1 tsp vanilla","1 tsp vinegar","Red food coloring, optional"],steps:["Heat oven to 175°C and prepare two 20 cm tins.","Combine dry ingredients. Whisk eggs, buttermilk, oil, vanilla and coloring separately.","Combine wet and dry ingredients just until smooth; stir in vinegar.","Bake 25–30 minutes until set.","Cool completely and pair with cream cheese frosting if desired."],note:"Coloring intensity varies by product. Cocoa quantity and acidity also vary among recipes."},
+carrotCake:{title:"Carrot Cake",source:"Classic spiced carrot-cake framework.",ing:["250 g grated carrots","200 g plain flour","170 g brown sugar","120 ml neutral oil","3 eggs","1 tsp cinnamon","1/2 tsp ground ginger","1 tsp baking powder","1/2 tsp baking soda","60 g chopped walnuts, optional","Pinch of salt"],steps:["Heat oven to 175°C and prepare a 20 cm round tin.","Whisk eggs, sugar and oil. Stir in carrots.","Mix dry ingredients separately, then fold into the wet mixture. Add walnuts if using.","Bake about 40–50 minutes until a skewer comes out clean.","Cool fully before adding frosting."],note:"Carrots release different amounts of water, so avoid packing excess liquid into the batter."},
+lemonCake:{title:"Lemon Drizzle Cake",source:"British-style lemon drizzle framework.",ing:["200 g unsalted butter","200 g caster sugar","4 eggs","200 g self-raising flour","Zest of 2 lemons","Juice of 2 lemons","100 g sugar for drizzle"],steps:["Heat oven to 180°C and line a loaf tin.","Beat butter and caster sugar until light, then add eggs gradually.","Fold in flour and lemon zest.","Bake about 45–55 minutes until a skewer comes out clean.","Mix lemon juice with 100 g sugar. Pierce the warm cake and spoon the drizzle over it."],note:"The drizzle should be added while the cake is warm so it can absorb into the crumb."},
+cheesecake:{title:"New York Cheesecake",source:"Baked American cheesecake framework.",ing:["200 g digestive biscuits or graham crackers","90 g melted butter","700 g full-fat cream cheese","180 g sugar","3 eggs","150 g sour cream","2 tsp vanilla","1 tbsp plain flour","Pinch of salt"],steps:["Heat oven to 160°C. Crush biscuits and mix with butter; press into a lined 20–23 cm springform tin.","Beat cream cheese and sugar gently until smooth. Add eggs one at a time.","Mix in sour cream, vanilla, flour and salt without overbeating.","Pour onto the base and bake about 55–70 minutes; the center should still have a slight wobble.","Cool gradually, then chill for several hours before slicing."],note:"A slow cooling process helps reduce cracking. Exact time depends heavily on pan size and oven."},
+tiramisu:{title:"Tiramisu",source:"Italian-style tiramisu framework; regional recipes vary.",ing:["250 g mascarpone","3 egg yolks","80 g sugar","200 ml strong coffee, cooled","200 g ladyfingers","Unsweetened cocoa powder","Optional: vanilla"],steps:["Whisk yolks and sugar until pale. Fold in mascarpone until smooth.","Briefly dip ladyfingers in cooled coffee; do not soak them until soggy.","Layer biscuits and mascarpone mixture in a dish.","Repeat layers, then chill at least 4 hours.","Dust with cocoa immediately before serving."],note:"Traditional tiramisu recipes differ on egg preparation and alcohol. This version omits alcohol."},
+blackForest:{title:"Black Forest Cake",source:"Black Forest-style chocolate and cherry layer cake.",ing:["Chocolate sponge cake, 2–3 layers","400 g sour cherries or cherries","300 ml whipping cream","2 tbsp sugar","1 tsp vanilla","Chocolate shavings"],steps:["Prepare or use cooled chocolate sponge layers.","Drain cherries and reserve some juice. Whip cream with sugar and vanilla until medium-firm.","Place one sponge layer on a plate, lightly moisten with cherry juice, then add cream and cherries.","Repeat layers and cover with whipped cream.","Finish with cherries and chocolate shavings; chill before slicing."],note:"Traditional Schwarzwälder Kirschtorte uses kirsch, but this version leaves it out and should not be described as the legally defined traditional version."},
+tresLeches:{title:"Tres Leches Cake",source:"Latin American-style tres leches framework.",ing:["1 plain sponge cake","350 ml evaporated milk","300 ml sweetened condensed milk","200 ml whole milk","250 ml whipping cream","2 tbsp sugar","Vanilla"],steps:["Bake a light sponge in a rectangular pan and cool slightly.","Whisk evaporated milk, condensed milk and whole milk.","Poke the cake evenly and pour the milk mixture over it gradually.","Chill several hours so the cake absorbs the liquid.","Whip cream with sugar and vanilla and spread over the chilled cake."],note:"Tres leches has many regional variations. Sponge texture and soaking levels can differ substantially."},
+bananaBread:{title:"Banana Bread",source:"Standard quick-bread formula.",ing:["3 very ripe bananas","100 g melted butter","150 g sugar","2 eggs","1 tsp vanilla","190 g plain flour","1 tsp baking soda","1/2 tsp cinnamon","Pinch of salt"],steps:["Heat oven to 175°C and line a loaf tin.","Mash bananas, then mix with melted butter, sugar, eggs and vanilla.","Whisk dry ingredients separately and fold into the banana mixture just until combined.","Pour into the tin and bake about 50–65 minutes.","Cool for at least 15 minutes before slicing."],note:"Banana size and ripeness change moisture and sweetness, so baking time can vary."},
+coconutCake:{title:"Coconut Cake",source:"Coconut-flavored layer cake framework.",ing:["200 g plain flour","180 g sugar","120 g butter","3 eggs","120 ml coconut milk","80 g desiccated coconut","1 tsp baking powder","1 tsp vanilla","Pinch of salt"],steps:["Heat oven to 175°C and prepare a 20 cm tin.","Cream butter and sugar. Add eggs gradually and mix in vanilla.","Fold in flour, baking powder, salt, coconut and coconut milk.","Bake about 35–45 minutes until set.","Cool and serve plain or with a light frosting and toasted coconut."],note:"Desiccated coconut absorbs moisture differently by brand, so batter consistency matters."},
+coffeeCake:{title:"Cinnamon Coffee Cake",source:"North American-style coffee cake framework.",ing:["200 g plain flour","150 g sugar","115 g butter","2 eggs","120 ml milk","1 tsp baking powder","1 tsp vanilla","Pinch of salt","For topping: 60 g flour, 60 g brown sugar, 1 tsp cinnamon, 40 g butter"],steps:["Heat oven to 175°C and prepare a 20 cm square tin.","Beat butter and sugar, then add eggs and vanilla.","Fold in flour, baking powder, salt and milk.","Mix topping ingredients until crumbly and scatter over batter.","Bake about 35–45 minutes until a skewer comes out clean."],note:"Coffee cake in this context usually means a cake served with coffee; coffee itself is not necessarily an ingredient."},
+vanilla:{title:"Classic Vanilla Cake",source:"Standard home-baking formula; oven performance varies.",ing:["200 g plain flour","200 g caster sugar","200 g unsalted butter, softened","4 large eggs","2 tsp baking powder","2 tsp vanilla extract","2 tbsp milk"],steps:["Heat oven to 180°C conventional / 160°C fan. Grease and line a 20 cm round tin.","Cream butter and sugar until light. Beat in eggs gradually, then vanilla.","Fold in flour and baking powder; add milk just until the batter is smooth.","Bake about 35–45 minutes, until a skewer inserted in the center comes out clean.","Cool completely before frosting or serving."],note:"For accurate baking, weigh ingredients and check the cake with a skewer rather than relying only on the clock."},
+chocolate:{title:"Chocolate Fudge Cake",source:"Rich chocolate layer-cake style.",ing:["190 g plain flour","200 g sugar","45 g cocoa powder","1 tsp baking powder","1 tsp bicarbonate of soda","2 eggs","120 ml milk","120 ml hot coffee or water","100 ml neutral oil"],steps:["Heat oven to 175°C conventional / 160°C fan. Prepare two 20 cm tins.","Whisk dry ingredients. Add eggs, milk and oil and mix until combined.","Gradually stir in hot coffee or water; the batter will be thin.","Divide between tins and bake about 25–32 minutes.","Cool fully before filling with chocolate frosting."],note:"Coffee is optional but deepens chocolate flavor without making the cake taste strongly of coffee."},
+redvelvet:{title:"Red Velvet Cake",source:"American-style red velvet; variations are common.",ing:["250 g plain flour","15 g cocoa powder","300 g sugar","2 eggs","240 ml buttermilk","120 ml neutral oil","1 tsp bicarbonate of soda","1 tsp vanilla","1 tbsp vinegar","Red food colouring as needed"],steps:["Heat oven to 175°C and prepare two 20 cm tins.","Whisk flour, cocoa and bicarbonate of soda. In another bowl mix sugar, eggs, oil, buttermilk and vanilla.","Combine wet and dry mixtures without overmixing. Add colouring to the desired shade.","Stir vinegar through the batter, divide into tins and bake about 25–30 minutes.","Cool fully and layer with cream-cheese frosting."],note:"The characteristic color and flavor depend on the ingredients and formulation; modern versions often use food coloring."},
+carrot:{title:"Carrot Cake",source:"Spiced carrot-cake style.",ing:["220 g plain flour","200 g brown sugar","200 g finely grated carrot","3 eggs","150 ml neutral oil","1 tsp cinnamon","1/2 tsp ground ginger","1 tsp baking powder","1/2 tsp bicarbonate of soda","Pinch of salt","80 g chopped walnuts, optional"],steps:["Heat oven to 175°C and line a 20 cm round tin.","Whisk eggs, sugar and oil. Stir in grated carrot.","Mix flour, spices, baking powder, bicarbonate of soda and salt separately.","Fold dry ingredients into wet ingredients; add walnuts if using.","Bake about 40–50 minutes, then cool completely before frosting."],note:"Carrots vary in moisture. If the batter is unusually wet, check doneness carefully and allow extra baking time if needed."},
+lemon:{title:"Lemon Drizzle Cake",source:"British-style lemon drizzle cake.",ing:["200 g unsalted butter, softened","200 g caster sugar","200 g self-raising flour","4 eggs","Zest of 2 lemons","Juice of 1 lemon","100 g icing sugar"],steps:["Heat oven to 180°C conventional / 160°C fan and line a loaf tin.","Beat butter and sugar until light, then beat in eggs gradually.","Fold in flour and lemon zest. Bake about 40–50 minutes.","Mix lemon juice with icing sugar. While cake is warm, pierce the top and spoon over the drizzle.","Cool before slicing."],note:"Apply the drizzle while the cake is warm so some syrup can soak into the crumb."},
+cheesecake:{title:"Baked Cheesecake",source:"Classic baked cheesecake framework.",ing:["200 g digestive biscuits or similar","90 g melted butter","600 g full-fat cream cheese","150 g sugar","3 eggs","1 tsp vanilla","150 g sour cream or thick yogurt","1 tbsp plain flour"],steps:["Heat oven to 160°C conventional / 140°C fan. Line a 20 cm springform tin.","Crush biscuits and mix with melted butter; press into the base and chill.","Beat cream cheese and sugar until smooth. Beat in eggs one at a time, then vanilla, sour cream and flour.","Pour onto the base and bake about 50–65 minutes, until the edges are set and the center still has a slight wobble.","Cool gradually, then chill for several hours before serving."],note:"A gentle oven and gradual cooling help reduce cracking. Exact time depends on the tin and oven."},
+blackforest:{title:"Black Forest Cake",source:"German Black Forest-style layer cake; traditional specifications vary.",ing:["1 chocolate sponge cake, baked and cooled","300 g cherries, drained if using jarred cherries","500 ml whipping cream","40 g icing sugar","1 tsp vanilla","50–75 g dark chocolate, shaved","Cherry syrup or kirsch, optional"],steps:["Split the cooled chocolate sponge into layers.","Whip cream with icing sugar and vanilla until it holds soft-to-medium peaks.","Moisten layers lightly with cherry syrup; add cherries and cream between layers.","Cover the cake with remaining cream and decorate with chocolate shavings and cherries.","Chill before slicing."],note:"Kirsch is traditional in many versions but is optional here; the recipe can be made without it."},
+tiramisu:{title:"Tiramisu Cake",source:"Tiramisu-inspired celebration cake; adaptation rather than a single traditional form.",ing:["1 plain or vanilla sponge","250 g mascarpone","250 ml whipping cream","60 g icing sugar","200 ml strong cooled coffee","Unsweetened cocoa powder","Vanilla"],steps:["Bake and cool the sponge, then split into two or three layers.","Whip cream with icing sugar and fold into mascarpone and vanilla.","Brush each sponge layer lightly with cooled coffee.","Spread cream between layers and over the top.","Dust generously with cocoa and chill for several hours."],note:"Classic tiramisu is normally assembled with ladyfingers rather than cake layers; this version is a cake adaptation."},
+banana:{title:"Banana Cake",source:"Moist banana cake home-baking formula.",ing:["250 g ripe mashed banana","180 g plain flour","120 g brown sugar","100 g melted butter","2 eggs","1 tsp baking powder","1/2 tsp bicarbonate of soda","1 tsp vanilla","Pinch of salt"],steps:["Heat oven to 175°C conventional / 160°C fan and line a loaf tin.","Whisk melted butter, sugar and eggs. Stir in banana and vanilla.","Mix flour, baking powder, bicarbonate of soda and salt; fold into the banana mixture.","Bake about 45–55 minutes until a skewer comes out clean or with a few moist crumbs.","Cool before slicing."],note:"Very ripe bananas provide the best flavor and moisture. Banana size varies, so weighing the peeled fruit improves consistency."},
+coconut:{title:"Coconut Cake",source:"Coconut celebration-cake style.",ing:["200 g plain flour","180 g sugar","170 g butter, softened","3 eggs","120 ml coconut milk","80 g desiccated coconut","2 tsp baking powder","1 tsp vanilla"],steps:["Heat oven to 175°C and prepare a 20 cm round tin.","Cream butter and sugar. Beat in eggs and vanilla.","Fold in flour and baking powder, alternating with coconut milk. Stir in coconut.","Bake about 35–45 minutes until set and lightly golden.","Cool and serve plain or with coconut frosting."],note:"Unsweetened desiccated coconut is used in this formula; sweetened coconut will change the sweetness and moisture."},
+strawberry:{title:"Strawberry Shortcake",source:"Strawberry shortcake-style dessert.",ing:["250 g plain flour","50 g sugar","2 tsp baking powder","80 g cold butter","150 ml milk","300 g strawberries","250 ml whipping cream","1 tbsp icing sugar"],steps:["Heat oven to 200°C conventional / 180°C fan. Mix flour, sugar and baking powder.","Rub in cold butter until crumbly, then add milk to form a soft dough.","Shape into one large round or several small rounds and bake about 15–20 minutes.","Cool, then split and fill with whipped cream and sliced strawberries.","Serve soon after assembly."],note:"Shortcake is best assembled close to serving so the biscuit or sponge stays pleasantly tender rather than soggy."},
+marble:{title:"Marble Cake",source:"Classic vanilla-and-chocolate marble cake.",ing:["200 g plain flour","200 g butter","200 g sugar","4 eggs","2 tsp baking powder","2 tsp vanilla","25 g cocoa powder","2 tbsp milk"],steps:["Heat oven to 175°C and prepare a loaf or 20 cm round tin.","Cream butter and sugar, then beat in eggs and vanilla.","Fold in flour and baking powder. Divide batter into two portions.","Mix cocoa and milk into one portion. Alternate spoonfuls of both batters in the tin and swirl gently once or twice.","Bake about 40–50 minutes until a skewer comes out clean."],note:"Avoid excessive swirling; a few gentle turns preserve the visible marble pattern."},
+cotton:{title:"Japanese Cotton Cheesecake",source:"Japanese-style airy cheesecake; technique-sensitive recipe.",ing:["250 g cream cheese","50 g butter","100 ml milk","6 eggs, separated","80 g sugar","50 g plain flour","20 g cornflour","1 tsp lemon juice"],steps:["Heat oven to 160°C. Line a 20 cm round tin and wrap the outside if using a water bath.","Gently melt cream cheese, butter and milk until smooth; cool slightly.","Whisk in egg yolks, then sift in flour and cornflour.","Whip egg whites with sugar to soft-to-medium peaks and fold gently into the cheese mixture.","Bake in a water bath about 55–70 minutes. Turn off the oven and let the cake cool gradually with the door slightly open."],note:"This cake is especially sensitive to overmixing, oven temperature and cooling. A gentle water bath and gradual cooling help maintain its airy texture."}
+};
+function show(k){let r=data[k];document.getElementById("content").innerHTML=`<h2>${r.title}</h2><div class="source">${r.source}</div><h3>Ingredients</h3><ul>${r.ing.map(i=>`<li>${i}</li>`).join("")}</ul><h3>Method</h3><ol>${r.steps.map(s=>`<li>${s}</li>`).join("")}</ol><div class="note"><b>Accuracy note:</b> ${r.note}</div>`;document.getElementById("modal").style.display="block"}
+function hide(){document.getElementById("modal").style.display="none"}
+window.onclick=e=>{if(e.target.id==="modal")hide()}
+const cards=[...document.querySelectorAll(".card")];
+document.querySelectorAll("#cakes .card").forEach(c=>{c.dataset.cat="cakes";c.dataset.name=(c.querySelector("h3")?.textContent+" "+c.querySelector(".tags")?.textContent).toLowerCase()});
+let filter="all";
+function apply(){let q=document.getElementById("search").value.toLowerCase(),n=0;cards.forEach(c=>{let ok=(filter==="all"||c.dataset.cat===filter||(filter==="vegetarian"&&c.innerText.toLowerCase().includes("vegetarian")))&&c.dataset.name.includes(q);c.style.display=ok?"block":"none";if(ok)n++});document.getElementById("empty").style.display=n?"none":"block"}
+document.querySelectorAll(".filter").forEach(b=>b.onclick=()=>{document.querySelectorAll(".filter").forEach(x=>x.classList.remove("active"));b.classList.add("active");filter=b.dataset.filter;apply()});document.getElementById("search").oninput=apply;
+</script>
+
+<script>
+(function(){
+const FKEY="wt_favorites_v2", RKEY="wt_ratings_v2", SKEY="wt_submissions_v2";
+function favs(){return JSON.parse(localStorage.getItem(FKEY)||"[]")}
+function ratings(){return JSON.parse(localStorage.getItem(RKEY)||"{}")}
+function submissions(){return JSON.parse(localStorage.getItem(SKEY)||"[]")}
+function setFavs(x){localStorage.setItem(FKEY,JSON.stringify(x))}
+function setRatings(x){localStorage.setItem(RKEY,JSON.stringify(x))}
+function updateFavCount(){const el=document.getElementById("favCount");if(el)el.textContent=favs().length}
+window.toggleProfessionalFavorite=function(id){
+ let a=favs(); a=a.includes(id)?a.filter(x=>x!==id):a.concat(id); setFavs(a); updateFavCount();
+ const b=document.querySelector('[data-pro-fav="'+id+'"]'); if(b){b.classList.toggle("saved",a.includes(id));b.textContent=a.includes(id)?"♥ Saved":"♡ Favorite";}
+}
+window.rateProfessional=function(id,n){
+ const r=ratings();r[id]=n;setRatings(r);
+ document.querySelectorAll('[data-stars="'+id+'"] button').forEach((b,i)=>b.textContent=i<n?"★":"☆");
+}
+window.submitRecipe=function(){
+ const title=document.getElementById("newTitle").value.trim(), country=document.getElementById("newCountry").value.trim();
+ const ing=document.getElementById("newIngredients").value.split(/\n+/).map(x=>x.trim()).filter(Boolean);
+ const steps=document.getElementById("newSteps").value.split(/\n+/).map(x=>x.trim()).filter(Boolean);
+ if(!title||!country||!ing.length||!steps.length){alert("Please complete all recipe fields.");return}
+ const a=submissions();a.push({id:"user-"+Date.now(),title,country,ingredients:ing,steps});localStorage.setItem(SKEY,JSON.stringify(a));
+ document.getElementById("newTitle").value=document.getElementById("newCountry").value=document.getElementById("newIngredients").value=document.getElementById("newSteps").value="";
+ alert("Recipe saved to this browser.");
+}
+updateFavCount();
+})();
+</script>
+
+</body>
+</html>
